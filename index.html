@@ -1,112 +1,644 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro Alliance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f111a;
+      --surface: #181b28;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f0f2f8;
+      --muted: #9aa3b8;
+      --accent: #6b8cff;
+      --accent-hover: #8aa3ff;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --transition-fast: 0.18s var(--ease);
+      --transition-med: 0.28s var(--ease);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      animation: page-in 0.45s var(--ease) both;
+    }
+
+    a {
+      color: var(--accent);
+      transition: color var(--transition-fast);
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .wrap {
+      width: min(1080px, 92vw);
+      margin-inline: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 17, 26, 0.94);
+      backdrop-filter: blur(8px);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      transition: opacity var(--transition-fast);
+    }
+
+    .logo:hover {
+      opacity: 0.88;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
+
+    .nav-links a {
+      position: relative;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.2rem 0;
+      transition: color var(--transition-fast);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-med);
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a:focus-visible::after {
+      transform: scaleX(1);
+    }
+
+    main {
+      padding-bottom: 3rem;
+    }
+
+    .hero {
+      padding: 3rem 0 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-lead {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      max-width: 42ch;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f111a;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: #0f111a;
+      box-shadow: 0 4px 18px rgba(107, 140, 255, 0.28);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent-hover);
+      outline-offset: 3px;
+    }
+
+    .hero-media {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition:
+        border-color var(--transition-med),
+        box-shadow var(--transition-med);
+    }
+
+    .hero-media:hover {
+      border-color: rgba(107, 140, 255, 0.25);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-height: 320px;
+      padding: 1.5rem 1.5rem 1.35rem;
+      background: linear-gradient(165deg, #1c2136 0%, #141824 45%, #0e111c 100%);
+      transition: filter var(--transition-med);
+    }
+
+    .hero-media:hover .hero-panel {
+      filter: brightness(1.04);
+    }
+
+    .hero-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 240px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+    }
+
+    .hero-stat {
+      text-align: center;
+      padding: 0.7rem 0.5rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .hero-stat span {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    @media (max-width: 480px) {
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    section {
+      padding: 2.5rem 0;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      max-width: 50ch;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem;
+      transition:
+        border-color var(--transition-med),
+        box-shadow var(--transition-med),
+        transform var(--transition-fast);
+    }
+
+    .card:hover {
+      border-color: rgba(107, 140, 255, 0.2);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+      transform: translateY(-2px);
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .about-visual {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .about-visual img {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 500px) {
+      .about-visual {
+        flex-direction: column;
+      }
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+
+    .event-card .date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .event-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .event-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .event-card a {
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-block;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 1px;
+      transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+    }
+
+    .event-card a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 520px;
+      transition: border-color var(--transition-med), box-shadow var(--transition-med);
+    }
+
+    .contact-block:hover {
+      border-color: rgba(107, 140, 255, 0.15);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .contact-block h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-block p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .socials a {
+      font-weight: 500;
+      text-decoration: none;
+      padding: 0.2rem 0;
+      border-bottom: 2px solid transparent;
+      transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+    }
+
+    .socials a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .card:hover {
+        transform: none;
+      }
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
-
 <body>
-
-<header>
-    <nav>
-       <a href="https://ka-ran.live"><img src="111-1112824_portfolio-png-removebg-preview.png" alt="MyPortfolio" height="70" width="200"></a>      
-            <ul class="nav-links">
-            <li><a href="">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contacts">Contact</a></li>
+  <header>
+    <div class="wrap">
+      <nav aria-label="Main">
+        <a class="logo" href="#top">Astro Alliance</a>
+        <ul class="nav-links">
+          <li><a href="#top">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
+      </nav>
+    </div>
+  </header>
 
-        <button id="theme-toggle">🌙</button>
-    </nav>
-</header>
-
-<section class="hero">
-    <img src="pic.jpeg" alt="Karan Verma" height="200" width="150">
-    <h1>Hi, I'm Karan Verma.</h1>
-    <p>Competitive Programmer | Web Developer</p>
-    <p>EE'29 NIT BHOPAL</p>
-    <a href="https://karann6287-sudo.github.io/Astro_Alliance/" target="_blank">
-        <button>View Project</button>
-    </a>
-</section>
-
-<section class="about" id="about">
-    <h2>About Me</h2><br><br>
-    <p>
-        I am Karan Verma,having a strong interest in programming and web development. <br>
-         I am currently learning Data Structures & Algorithms while building projects using HTML, CSS and Javascript to strengthen my development. <br> I enjoy solving problems, learning new technologies, and continuously improving my technical knowledge.
-    </p>
-</section>
-    <div class="education">
-        <h2>Education</h2>
-        <div class="edu-card">
-            <img src="MANIT.png" alt="MANIT" height="100" width="100" class="manimg">
-            <div class="edu-text">
-                <h3 style="font-weight: 500; font-size: 25px;">NIT Bhopal</h3>
-                <h3 style="font-weight: 500;">B.Tech Electrical Engineering</h3>
-                
-                <p>2025 – 2029</p>
+  <main id="top">
+    <div class="wrap hero">
+      <div>
+        <h1>Science, space, and student-led discovery</h1>
+        <p class="hero-lead">
+          Astro Alliance promotes astronomy, astrophysics, and space technology through research, collaboration, and events at MANIT Bhopal.
+        </p>
+        <a class="btn btn-primary" href="https://www.astroalliancenitb.in/" target="_blank" rel="noopener">Visit official site</a>
+      </div>
+      <div
+        class="hero-media"
+        role="img"
+        aria-label="Decorative graphic: night sky, planet, and orbit"
+      >
+        <div class="hero-panel">
+          <svg
+            class="hero-svg"
+            viewBox="0 0 400 260"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <defs>
+              <radialGradient id="heroSky" cx="35%" cy="25%" r="75%">
+                <stop offset="0%" stop-color="#2a3560" />
+                <stop offset="55%" stop-color="#151a2e" />
+                <stop offset="100%" stop-color="#0b0e18" />
+              </radialGradient>
+              <linearGradient id="heroPlanet" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8aa3ff" />
+                <stop offset="100%" stop-color="#4d62c4" />
+              </linearGradient>
+              <linearGradient id="heroGlow" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#6b8cff" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#6b8cff" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <rect width="400" height="260" fill="url(#heroSky)" rx="8" />
+            <circle cx="62" cy="48" r="1.2" fill="#e8ecff" opacity="0.9" />
+            <circle cx="108" cy="72" r="0.9" fill="#e8ecff" opacity="0.65" />
+            <circle cx="312" cy="56" r="1" fill="#e8ecff" opacity="0.8" />
+            <circle cx="340" cy="96" r="0.7" fill="#e8ecff" opacity="0.55" />
+            <circle cx="28" cy="118" r="0.8" fill="#e8ecff" opacity="0.5" />
+            <circle cx="368" cy="38" r="0.6" fill="#e8ecff" opacity="0.7" />
+            <circle cx="220" cy="34" r="1.1" fill="#e8ecff" opacity="0.85" />
+            <ellipse cx="200" cy="200" rx="118" ry="36" fill="none" stroke="rgba(107,140,255,0.22)" stroke-width="1.5" stroke-dasharray="6 10" />
+            <ellipse cx="200" cy="200" rx="148" ry="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+            <circle cx="318" cy="124" r="10" fill="#1e2438" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+            <circle cx="112" cy="168" r="14" fill="#252b42" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+            <ellipse cx="200" cy="200" rx="86" ry="86" fill="url(#heroPlanet)" />
+            <ellipse cx="168" cy="172" rx="36" ry="18" fill="rgba(255,255,255,0.12)" transform="rotate(-18 168 172)" />
+            <ellipse cx="200" cy="248" rx="86" ry="24" fill="url(#heroGlow)" />
+          </svg>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong>Research</strong>
+              <span>Student-led projects &amp; labs</span>
             </div>
+            <div class="hero-stat">
+              <strong>Events</strong>
+              <span>Expos, talks &amp; competitions</span>
+            </div>
+            <div class="hero-stat">
+              <strong>Community</strong>
+              <span>MANIT Bhopal &amp; beyond</span>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</section>
 
-<section class="skills">
-    <h2>Skills</h2>
-    <div class="skillcard">
-        <div class="card">Web Development</div>
-        <div class="card">Data Structures</div>
-        <div class="card">Problem Solving</div>
-    </div>
-</section>
-
-<section class="languages">
-    <h2>Languages</h2>
-    <div class="languagecard">
-        <div class="card">C++</div>
-        <div class="card">C Language</div>
-        <div class="card">JavaScript</div>
-    </div>
-</section>
-
-<section class="projects" id="projects">
-    <h2>Projects</h2>
-    <div class="project-grid">
-        <div class="card">Personal Portfolio</div>
-        <div class="card">Society Landing Page</div>
-        <div class="card">Event Survey Form</div>
-    </div>
-</section>
-<div class="experience">
-    <h2>Experience</h2>
-    <div class="exp-card">
-        <img src="astro.webp" alt="StarLab" height="110" width="110">
-        <div class="exp-text">
-            <h3 style="font-size: 25px; font-weight: 500;">StarLab NITB</h3>
-            <p style="font-size: 20px; font-weight: 300;">Web Developer</p>
-            <p>Since Feb 2026</p>
+    <section id="about" aria-labelledby="about-heading">
+      <div class="wrap">
+        <h2 class="section-title" id="about-heading">About us</h2>
+        <p class="section-desc">Our mission and vision for the community.</p>
+        <div class="about-grid">
+          <article class="card">
+            <h2>Mission</h2>
+            <p>
+              To ignite scientific curiosity and foster active learning in astronomy, astrophysics, and space technology by promoting student-led research, interdisciplinary collaboration, and events that connect theory with practice.
+            </p>
+          </article>
+          <article class="card">
+            <h2>Vision</h2>
+            <p>
+              To become a leading student-driven platform that inspires space exploration, promotes scientific thinking, and bridges academia with space research in India.
+            </p>
+          </article>
         </div>
-    </div>
-</div>
-<br><br><br><br><br>
+        <div class="about-visual card">
+          <img src="astro.webp" alt="Astro Alliance logo or symbol">
+          <p style="color: var(--muted); font-size: 0.95rem; margin: 0;">
+            We host workshops, competitions, and celebrations that bring students and space enthusiasts together.
+          </p>
+        </div>
+      </div>
+    </section>
 
-<footer>
-    <h3 style="font-size: 18px;" id="contacts">My Contacts</h3>
-    <ul>
-        <li>Email: karann6287@gmail.com</li>
-        <li>
-            <a href="https://www.linkedin.com/in/karan-verma-48262a363/" target="_blank">
-                <i class="fa-brands fa-linkedin"></i>
-            </a>
-        </li>
-    </ul>
-    <p>© 2026 Karan Verma</p>
-</footer>
+    <section id="events" aria-labelledby="events-heading">
+      <div class="wrap">
+        <h2 class="section-title" id="events-heading">Past events</h2>
+        <p class="section-desc">Highlights from recent programmes.</p>
+        <div class="events-grid">
+          <article class="card event-card">
+            <p class="date">Jan 2026</p>
+            <h3>Kshitij 4.0</h3>
+            <p>Grand space tech expo and competitions.</p>
+            <a href="https://www.astroalliancenitb.in/events/techno26" target="_blank" rel="noopener">View details</a>
+          </article>
+          <article class="card event-card">
+            <p class="date">Apr 2024</p>
+            <h3>Kshitij</h3>
+            <p>Inaugurated by IN-SPACe; students showcased projects and talent.</p>
+            <a href="https://www.astroalliancenitb.in/events/kshitiz-2025" target="_blank" rel="noopener">View details</a>
+          </article>
+          <article class="card event-card">
+            <p class="date">Aug 2024</p>
+            <h3>National Space Day</h3>
+            <p>Celebrating India’s space achievements and global milestones.</p>
+            <a href="https://www.astroalliancenitb.in/events/nsd-2024" target="_blank" rel="noopener">View details</a>
+          </article>
+          <article class="card event-card">
+            <p class="date">Aug 2025</p>
+            <h3>Parikalp — National Space Day</h3>
+            <p>Competitions and events highlighting India’s astro potential.</p>
+            <a href="https://www.astroalliancenitb.in/events/parikalp-2025" target="_blank" rel="noopener">View details</a>
+          </article>
+        </div>
+      </div>
+    </section>
 
-<script src="toggle.js"></script>
+    <section id="contact" aria-labelledby="contact-heading">
+      <div class="wrap">
+        <h2 class="section-title" id="contact-heading">Contact</h2>
+        <p class="section-desc">Reach out or follow us online.</p>
+        <div class="contact-block">
+          <h2>Get in touch</h2>
+          <p><strong style="color: var(--text);">Email:</strong> starlab2107@gmail.com</p>
+          <div class="socials">
+            <a href="https://www.linkedin.com/company/starlab2107/" target="_blank" rel="noopener">LinkedIn</a>
+            <span style="color: var(--border);">|</span>
+            <a href="https://www.instagram.com/starlab_manit/" target="_blank" rel="noopener">Instagram</a>
+            <span style="color: var(--border);">|</span>
+            <a href="https://www.astroalliancenitb.in/" target="_blank" rel="noopener">Website</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
+  <footer>
+    <div class="wrap">Astro Alliance · MANIT Bhopal</div>
+  </footer>
 </body>
 </html>
